@@ -42,6 +42,7 @@ func cloneRepo(owner string, repo string) {
 	if err != nil {
 		logrus.WithError(err).Fatal("could not clone repo")
 	}
+	// construc the repo struct
 	// repo.test()
 	// repo.info()
 }
