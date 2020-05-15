@@ -14,6 +14,7 @@ import (
 type NewRepo struct {
 	owner    string
 	repoName string
+	dir      string
 }
 
 type starJson struct {
@@ -46,11 +47,11 @@ func (r *NewRepo) StarNum() int {
 }
 
 func (r *NewRepo) Files() []File {
-	fileNameList := getFiles(r.owner, r.repoName)
+	fileNameList := getFiles(r.owner, r.repoName, r.dir)
 
 }
 
-func getFiles(owner string, repoName string) []string {
+func getFiles(owner string, repoName string, dir string) []File {
 	contentUrl := fmt.Sprintf("%s%s/%s/contents", baseUrl, owner, repoName)
 	fmt.Println(contentUrl)
 	res, err := http.Get(contentUrl)
@@ -80,14 +81,35 @@ func getFiles(owner string, repoName string) []string {
 
 		goFiles = append(goFiles, file.Name)
 	}
-	return goFiles
+
+	err = execTest(dir)
+	if err != nil {
+		logrus.WithError(err).Fatal("could not go test the github repo")
+	}
+
+	testedFiles := ParseFile(dir)
+
+	var testedFileList []File
+	for _, fileName := range goFiles {
+		content := getContentForFileName(owner, repoName, fileName)
+
+		// struct a File and append to the
+	}
+
+	return nil
+
+	// for loop to struct file for each file
+
+	//  test part
+
+	// return goFiles
 }
 
-func getContentForFileName(owner, repoName, fileName string) File {
+func getContentForFileName(owner, repoName, fileName string) string {
 	contentUrl := fmt.Sprintf("%s%s/%s/contents/%s.go", baseUrl, owner, repoName, fileName)
 	res, err := http.Get(contentUrl)
 	if err != nil {
-		logrus.WithError(err).Fatal("get content http request failed")	
+		logrus.WithError(err).Fatal("get content http request failed")
 	}
 
 	if res.StatusCode != 200 {
@@ -96,15 +118,8 @@ func getContentForFileName(owner, repoName, fileName string) File {
 
 	var fileContent fileContentJson
 	json.NewDecoder(res.Body).Decode(&fileContent)
-	content := fileContent.Content
-	
-	return File{
-		Name: fileName,
-		Content: content,
-		// TODO: coverage for this file
-	}
 
-	
+	return fileContent.Content
 }
 
 func decodeContent(encodedString string) string {

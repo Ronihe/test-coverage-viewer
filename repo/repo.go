@@ -14,13 +14,17 @@ type RepoInfo struct {
 type File struct {
 	Name         string
 	Content      string
-	TestCoverage string
+	TestCoverage []CoverageBlock
 }
 
 const baseUrl = "https://api.github.com/repos/"
 
-func GetRepoInfo() {
-	// init repo struct
-	// add to the final
+func GetRepoInfo(repo NewRepo) RepoInfo {
+	starNum := repo.StarNum()
+	files := repo.Files()
 
+	return RepoInfo{
+		StarNum: starNum,
+		GoFiles: files,
+	}
 }
