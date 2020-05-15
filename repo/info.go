@@ -119,6 +119,7 @@ func getContentForFileName(owner, repoName, fileName string) string {
 	return fileContent.Content
 }
 
+// TODO: decode the content in frontend
 func decodeContent(encodedString string) string {
 	decoded, err := b64.StdEncoding.DecodeString(encodedString)
 	if err != nil {

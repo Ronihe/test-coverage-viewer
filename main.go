@@ -1,28 +1,60 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"os"
 
-	"io/ioutil"
-
 	"fuzzbuzz.com/roni/v1/repo"
-
-	"github.com/sirupsen/logrus"
-
 	git "github.com/go-git/go-git/v5"
+	"github.com/sirupsen/logrus"
 )
 
 // /api/:github_org/:github_repo/info
 // /api/:github_org/:github_repo/test
+// design api, just need
+
 const baseUrl = "https://github.com/"
 
 func main() {
-	cloneRepo("google", "uuid")
+
+	http.HandleFunc("/", hello)
+	http.ListenAndServe(":8080", nil)
 
 }
 
-func cloneRepo(owner string, repoName string) {
+type data struct {
+	Owner    string
+	RepoName string
+}
+
+func hello(w http.ResponseWriter, req *http.Request) {
+	decoder := json.NewDecoder(req.Body)
+
+	var data data
+	err := decoder.Decode(&data)
+	if err != nil {
+		logrus.WithError(err).Fatal("could not decode request")
+	}
+
+	owner := data.Owner
+	repoName := data.RepoName
+
+	repoInfo := cloneRepo(owner, repoName)
+
+	js, err := json.Marshal(repoInfo)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(js)
+}
+
+func cloneRepo(owner string, repoName string) repo.RepoInfo {
 	dir, err := ioutil.TempDir("./", "test")
 	if err != nil {
 		logrus.WithError(err).Fatal("could not create temp directory")
@@ -40,5 +72,6 @@ func cloneRepo(owner string, repoName string) {
 
 	repo := repo.GetRepoInfo(repo.CreateNewRepo(owner, repoName, dir))
 	fmt.Print(repo.StarNum)
+	return repo
 
 }

@@ -3,14 +3,13 @@ package repo
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"os/exec"
 	"strconv"
 	"strings"
 
 	"github.com/sirupsen/logrus"
-
-	"io/ioutil"
-	"log"
-	"os/exec"
 )
 
 type ProjectCoverage struct {
