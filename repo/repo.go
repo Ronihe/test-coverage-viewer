@@ -19,7 +19,7 @@ type File struct {
 
 const baseUrl = "https://api.github.com/repos/"
 
-func GetRepoInfo(repo NewRepo) RepoInfo {
+func GetRepoInfo(repo Repo) RepoInfo {
 	starNum := repo.StarNum()
 	files := repo.Files()
 

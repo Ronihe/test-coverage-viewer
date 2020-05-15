@@ -29,7 +29,7 @@ type CoverageBlock struct {
 
 func execTest(dir string) error {
 	cmd := exec.Command("go", "test", "-coverprofile", "coverage.out")
-	cmd.Dir = fmt.Sprintf("../%s", dir)
+	cmd.Dir = fmt.Sprintf("./%s", dir)
 	err := cmd.Run()
 	if err != nil {
 		log.Fatalf("cmd.Run() failed with %s\n", err)
@@ -38,18 +38,21 @@ func execTest(dir string) error {
 	return err
 }
 
-func ParseFile(dir string) ProjectCoverage {
-	path := fmt.Sprintf("../%s/coverage.out")
+func ParseFile(dir string) map[string][]CoverageBlock {
+	path := fmt.Sprintf("./%s/coverage.out", dir)
 	input, err := ioutil.ReadFile(path)
 	if err != nil {
 		logrus.WithError(err).Fatal("could not read coverage.out")
 	}
 	coverage := ParseCover(input)
 
+	coverageMap := map[string][]CoverageBlock{}
 	for _, file := range coverage.Files {
-		fmt.Println(file)
+		fileNameList := strings.Split(file.FileName, "/")
+		coverageMap[fileNameList[len(fileNameList)-1]] = file.CoverageBlocks
 	}
-	return coverage
+
+	return coverageMap
 }
 
 func ParseCover(coverFile []byte) ProjectCoverage {
