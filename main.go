@@ -20,7 +20,7 @@ const baseUrl = "https://github.com/"
 
 func main() {
 
-	http.HandleFunc("/", hello)
+	http.HandleFunc("/info", getRepoInfo)
 	http.ListenAndServe(":8080", nil)
 
 }
@@ -30,7 +30,7 @@ type data struct {
 	RepoName string
 }
 
-func hello(w http.ResponseWriter, req *http.Request) {
+func getRepoInfo(w http.ResponseWriter, req *http.Request) {
 	decoder := json.NewDecoder(req.Body)
 
 	var data data
@@ -42,7 +42,7 @@ func hello(w http.ResponseWriter, req *http.Request) {
 	owner := data.Owner
 	repoName := data.RepoName
 
-	repoInfo := cloneRepo(owner, repoName)
+	repoInfo := repoForOwnerRepoName(owner, repoName)
 
 	js, err := json.Marshal(repoInfo)
 	if err != nil {
@@ -54,7 +54,7 @@ func hello(w http.ResponseWriter, req *http.Request) {
 	w.Write(js)
 }
 
-func cloneRepo(owner string, repoName string) repo.RepoInfo {
+func repoForOwnerRepoName(owner string, repoName string) repo.RepoInfo {
 	dir, err := ioutil.TempDir("./", "test")
 	if err != nil {
 		logrus.WithError(err).Fatal("could not create temp directory")
