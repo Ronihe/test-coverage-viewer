@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "FE"
+    }
+  },
+  "defaultProject": "FE",
+  "cli": {
+    "defaultCollection": "@ngrx/schematics"
+  }
 }
