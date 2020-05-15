@@ -2,18 +2,18 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"os"
 
-	"context"
 	"io/ioutil"
 
+	"github.com/sirupsen/logrus"
+
 	git "github.com/go-git/go-git/v5"
-	github "github.com/google/go-github/v31/github"
 )
 
 // /api/:github_org/:github_repo/info
 // /api/:github_org/:github_repo/test
-var url = "https://github.com/google/uuid.git"
+const baseUrl = "https://github.com/"
 
 type githubRepo struct {
 	Owner string
@@ -22,63 +22,26 @@ type githubRepo struct {
 
 func main() {
 	fmt.Println("hello")
-	cloneRepo()
-	getInfo()
+	cloneRepo("google", "uuid")
 
 }
 
-// TODO: should create a package to make the
-
-func cloneRepo() {
-	fmt.Println("I am clonding ")
+func cloneRepo(owner string, repo string) {
 	dir, err := ioutil.TempDir("./", "test")
-
 	if err != nil {
-		fmt.Println(err)
+		logrus.WithError(err).Fatal("could not create temp directory")
 	}
-	// DELAY: AND DELETE THE REPO
-	// TEST AND GO FILE AND GET THE COVERAGE FILE
-	// THE JSON FILE AND UTILIZE FUNCTION CONVERT TO THE FILE TO FRONT END
-	//
+	defer os.RemoveAll(dir) // clean up after testing coverage is done
+	// FIXME: to delete
+	fmt.Println("directory created: ", dir)
 
-	fmt.Println(dir)
-	// Clones the repository into the given dir, just as a normal git clone does
+	url := fmt.Sprintf("%s%s/%s.git", baseUrl, owner, repo)
 	_, err = git.PlainClone(dir, false, &git.CloneOptions{
 		URL: url,
 	})
-
 	if err != nil {
-		log.Fatal(err)
+		logrus.WithError(err).Fatal("could not clone repo")
 	}
-}
-
-func removeRepo() {
-
-	fmt.Println("I am removing the ")
-
-}
-
-func testRepo() {
-	fmt.Println("testing")
-	// use the exec commnad to executee the go test, returnt he file
-}
-
-func parse2Json() {
-	fmt.Println("parsing json--")
-	// can be pase to json from the file
-	// send to the front end
-
-}
-
-func getInfo() {
-	// list of files
-	// stars
-	client := github.NewClient(nil)
-
-	_, resp, err := client.Activity.ListStargazers(context.TODO(), "google", "uuid", nil)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(*resp)
+	// repo.test()
+	// repo.info()
 }
