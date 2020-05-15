@@ -7,14 +7,14 @@ type Repo interface {
 
 // FIXME: should be exported, in the model file
 type RepoInfo struct {
-	StarNum int
-	GoFiles []File
+	StarNum int    `json:"starNum`
+	GoFiles []File `json:"goFiles"`
 }
 
 type File struct {
-	Name         string
-	Content      string
-	TestCoverage []CoverageBlock
+	Name         string          `json:"name"`
+	Content      string          `json:"content"`
+	TestCoverage []CoverageBlock `json:"testCoverage"`
 }
 
 const baseUrl = "https://api.github.com/repos/"

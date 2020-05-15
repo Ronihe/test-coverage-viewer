@@ -8,9 +8,9 @@ import { AppComponent } from './app.component';
 import { RepoComponent } from './repo/repo.component';
 import { FilesComponent } from './files/files.component';
 import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers } from './reducers';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { environment } from '../environments/environment';
+import { EffectsModule } from '@ngrx/effects';
+import { RepoEffects } from './repo.effects';
+import { RepoReducer } from './repo.reducer';
 
 @NgModule({
   declarations: [AppComponent, RepoComponent, FilesComponent],
@@ -20,14 +20,8 @@ import { environment } from '../environments/environment';
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    StoreModule.forRoot(reducers, {
-      metaReducers, 
-      runtimeChecks: {
-        strictStateImmutability: true,
-        strictActionImmutability: true,
-      }
-    }),
-    !environment.production ? StoreDevtoolsModule.instrument() : [],
+    StoreModule.forRoot({ repo: RepoReducer }),
+    EffectsModule.forRoot([RepoEffects]),
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -22,8 +22,8 @@ type FileCoverage struct {
 }
 
 type CoverageBlock struct {
-	StartLine int `json:"start_line"`
-	EndLine   int `json:"end_line"`
+	StartLine int `json:"startLine"`
+	EndLine   int `json:"endLine"`
 }
 
 func execTest(dir string) error {
