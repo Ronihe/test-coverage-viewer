@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store, select, resultMemoize } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 import { Repo, FileModel, TestedFileModel, MarkLine } from '../repo.model';
 import RepoState from '../repo.state';
@@ -15,16 +15,18 @@ import TestedRepoModel from '../repo.model';
   styleUrls: ['./files.component.scss'],
 })
 export class FilesComponent implements OnInit {
+  path: any;
   repoSub$: Observable<RepoState>;
   repoObject: RepoState;
   repo: TestedRepoModel;
   markTestedFiles: TestedFileModel[];
   currentFile: TestedFileModel;
   displayedColumns: string[] = ['name'];
+  starNum: string;
 
   constructor(
     private store: Store<{ repo: RepoState }>,
-    private route: Router
+    private route: ActivatedRoute
   ) {
     this.repoSub$ = this.store.select('repo').pipe(
       tap((result) => {
@@ -49,6 +51,7 @@ export class FilesComponent implements OnInit {
             return testedFile;
           });
           this.currentFile = this.markTestedFiles[0];
+          this.starNum = (this.repo.starNum / 1000).toFixed(1) + ' k';
         }
       })
     );
@@ -99,5 +102,8 @@ export class FilesComponent implements OnInit {
     console.log(this.markTestedFiles);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.path = this.route.snapshot.paramMap.get('path');
+    console.log(this.path);
+  }
 }

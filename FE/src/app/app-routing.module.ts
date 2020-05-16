@@ -5,7 +5,7 @@ import { FilesComponent } from './files/files.component';
 
 const routes: Routes = [
   { path: 'repo', component: RepoComponent },
-  { path: 'files', component: FilesComponent },
+  { path: 'files/:path', component: FilesComponent },
   { path: '', redirectTo: '/repo', pathMatch: 'full' },
 ];
 

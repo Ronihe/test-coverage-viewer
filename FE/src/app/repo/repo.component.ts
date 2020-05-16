@@ -30,6 +30,6 @@ export class RepoComponent implements OnInit {
     }
     const repo: Repo = { owner: userInputList[0], repoName: userInputList[1] };
     this.store.dispatch(RepoActions.GetRepoAction({ payload: repo }));
-    this.route.navigate(['/files']);
+    this.route.navigate(['/files/', this.inputRepo.value]);
   }
 }
