@@ -116,7 +116,7 @@ func getContentForFileName(owner, repoName, fileName string) string {
 	var fileContent fileContentJson
 	json.NewDecoder(res.Body).Decode(&fileContent)
 
-	return fileContent.Content
+	return decodeContent(fileContent.Content)
 }
 
 // TODO: decode the content in frontend

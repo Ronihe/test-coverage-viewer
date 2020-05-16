@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-import { Repo, FileModel } from '../repo.model';
+import { Repo, FileModel, ModifiedFileModel } from '../repo.model';
 import RepoState from '../repo.state';
 import { getTestBed } from '@angular/core/testing';
 import * as RepoActions from '../repo.action';
@@ -20,7 +20,13 @@ export class FilesComponent implements OnInit {
   repoSub$: Observable<RepoState>;
   repoObject: RepoState;
   repo: TestedRepoModel;
-  currentFile: FileModel;
+  modifiledFiles: ModifiedFileModel[];
+  currentFile: ModifiedFileModel;
+  displayedColumns: string[] = ['name'];
+
+  test1 = 'fdhkadjkaf';
+  test2 = '        dfdafd';
+
   constructor(
     private store: Store<{ repo: RepoState }>,
     private route: Router
@@ -28,18 +34,33 @@ export class FilesComponent implements OnInit {
     this.repoSub$ = this.store.select('repo').pipe(
       tap((result) => {
         this.repoObject = result;
-        console.log('what is the repo obk', this.repoObject);
         this.repo = this.repoObject.tested;
-        console.log('what is the repo', this.repo);
         if (this.repo) {
-          this.currentFile = this.repo.goFiles[0];
+          this.modifiledFiles = this.repo.goFiles.map((x) => {
+            let splited = x.content.split('\n');
+            let splitedContent = []
+
+            for (let i = 0; i < splitedContent.length; i++) {
+              let numberedString = (i + 1) + splitedContent[i];
+              splitedContent.push(numberedString)
+            }
+
+            let modifiedFile: ModifiedFileModel = {
+              name: x.name,
+              splitedContent: splitedContent,
+              testCoverage: x.testCoverage,
+            };
+            return modifiedFile;
+          });
+          console.log('modied--', this.modifiledFiles);
+          this.currentFile = this.modifiledFiles[0];
         }
       })
     );
   }
 
-  changeFile(FileId) {
-    console.log(FileId);
+  changeFile(file) {
+    this.currentFile = file;
     // this.currentFile =
   }
 

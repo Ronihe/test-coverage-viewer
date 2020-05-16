@@ -8,6 +8,12 @@ export default class TestedRepoModel {
   goFiles: FileModel[];
 }
 
+export interface ModifiedFileModel {
+  name: string;
+  splitedContent: string[];
+  testCoverage: CoverageBlockModel[];
+}
+
 export interface FileModel {
   name: string;
   content: string;

@@ -11,6 +11,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { RepoEffects } from './repo.effects';
 import { RepoReducer } from './repo.reducer';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [AppComponent, RepoComponent, FilesComponent],
@@ -21,6 +22,7 @@ import { RepoReducer } from './repo.reducer';
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
+    MatTableModule,
     StoreModule.forRoot({ repo: RepoReducer }),
     EffectsModule.forRoot([RepoEffects]),
   ],

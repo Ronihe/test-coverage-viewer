@@ -5,8 +5,39 @@ repo: repoSub$|async
 ></ng-template>
 
 <p>files</p>
+  <li>
+    {{test1}}
+  </li>
+  <li>{{test2}}</li>
+
 <div *ngIf="repo">
-  <p> stars {{repo.starNum}}</p>
-  <p>{{currentFile.content}}</p>
+  <p> Stars {{repo.starNum}}</p>
+  <div>
+    
+    <mat-table [dataSource]="modifiledFiles"data-test-id="repo-fie-name">
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef> File </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>  
+      </ng-container>
+      
+      <mat-header-row
+      *matHeaderRowDef="displayedColumns"
+      ></mat-header-row>
+      <mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      (click)="changeFile(row)"
+      ></mat-row>
+    </mat-table>
+    <ul style="list-style: none;">
+      <li *ngFor="let line of currentFile.splitedContent">
+        {{line}}
+      </li>
+      
+      
+    </ul>
+    
+    
+    <p>{{currentFile.splitedContent}}</p>
+  </div>
 </div>
 
