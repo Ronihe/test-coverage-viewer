@@ -1,10 +1,9 @@
-<p>repo works!</p>
+
 <div>
   <p>Enter a Go Repo to test</p>
  <label for="/repo">github.com/</label> 
  <input 
- type="text" placeholder="github_org/github_repo">
- <a routerLink="/files">herherhe</a>
+ type="text" placeholder="github_org/github_repo" [formControl]="inputRepo">
  <button type="button" (click)="getTested()">Load</button>
 </div>
 

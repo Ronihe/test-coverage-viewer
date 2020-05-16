@@ -1,1 +1,12 @@
-<p>files works!</p>
+<ng-template
+*ngIf="{
+repo: repoSub$|async
+}"
+></ng-template>
+
+<p>files</p>
+<div *ngIf="repo">
+  <p> stars {{repo.starNum}}</p>
+  <p>{{currentFile.content}}</p>
+</div>
+

@@ -1,10 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Store, select } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { FormControl } from '@angular/forms';
 
 import { Repo } from '../repo.model';
 import RepoState from '../repo.state';
 import { getTestBed } from '@angular/core/testing';
 import * as RepoActions from '../repo.action';
+import TestedRepoModel from '../repo.model';
 
 @Component({
   selector: 'repo',
@@ -12,16 +17,19 @@ import * as RepoActions from '../repo.action';
   styleUrls: ['./repo.component.scss'],
 })
 export class RepoComponent implements OnInit {
-  constructor(private store: Store<RepoState>) {
-    //this.repo$ = store.pipe(select('tested'));
-  }
+  inputRepo = new FormControl('');
+  constructor(private store: Store<RepoState>, private route: Router) {}
 
   ngOnInit(): void {}
 
   getTested() {
-    // const owner = this.userInput;
-    // const repoName =
-    const repo: Repo = { owner: 'google', repoName: 'uuid' };
+    let userInputList = this.inputRepo.value.split('/');
+    if (userInputList.length != 2) {
+      alert('Invalid input, Please try another github repo.');
+      return;
+    }
+    const repo: Repo = { owner: userInputList[0], repoName: userInputList[1] };
     this.store.dispatch(RepoActions.GetRepoAction({ payload: repo }));
+    this.route.navigate(['/files']);
   }
 }

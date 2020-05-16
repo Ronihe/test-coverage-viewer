@@ -15,8 +15,8 @@ export class RepoEffects {
     console.log('what happened in effect--');
     return this.action$.pipe(
       ofType(RepoActions.GetRepoAction),
-      mergeMap((action) =>
-        this.repoService.getRepo(action.payload).pipe(
+      mergeMap((action) => {
+        return this.repoService.getRepo(action.payload).pipe(
           map((data: TestedRepoModel) => {
             return RepoActions.SuccessGetToDoAction({ payload: data });
           }),
@@ -25,8 +25,8 @@ export class RepoEffects {
               RepoActions.ErrorRepoAction({ payload: 'error getting repo' })
             );
           })
-        )
-      )
+        );
+      })
     );
   });
 }
