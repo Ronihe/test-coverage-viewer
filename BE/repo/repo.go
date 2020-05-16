@@ -7,7 +7,7 @@ type Repo interface {
 
 // FIXME: should be exported, in the model file
 type RepoInfo struct {
-	StarNum int    `json:"starNum`
+	StarNum int    `json:"starNum"`
 	GoFiles []File `json:"goFiles"`
 }
 
