@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -31,7 +30,7 @@ func execTest(dir string) error {
 	cmd.Dir = fmt.Sprintf("./%s", dir)
 	err := cmd.Run()
 	if err != nil {
-		log.Fatalf("cmd.Run() failed with %s\n", err)
+		logrus.Errorf("cmd.Run() failed with %s\n", err)
 	}
 
 	return err
@@ -41,7 +40,8 @@ func ParseFile(dir string) map[string][]CoverageBlock {
 	path := fmt.Sprintf("./%s/coverage.out", dir)
 	input, err := ioutil.ReadFile(path)
 	if err != nil {
-		logrus.WithError(err).Fatal("could not read coverage.out")
+		logrus.WithError(err).Error("could not read coverage.out")
+		return nil
 	}
 	coverage := ParseCover(input)
 

@@ -15,7 +15,7 @@ import TestedRepoModel from '../repo.model';
   styleUrls: ['./files.component.scss'],
 })
 export class FilesComponent implements OnInit {
-  path: any;
+  path: string;
   repoSub$: Observable<RepoState>;
   repoObject: RepoState;
   repo: TestedRepoModel;
@@ -23,6 +23,7 @@ export class FilesComponent implements OnInit {
   currentFile: TestedFileModel;
   displayedColumns: string[] = ['name'];
   starNum: string;
+  isTested: boolean = false;
 
   constructor(
     private store: Store<{ repo: RepoState }>,
@@ -97,9 +98,8 @@ export class FilesComponent implements OnInit {
       return testedFile;
     });
 
-    console.log(newMarkTestedFiles);
     this.markTestedFiles = newMarkTestedFiles;
-    console.log(this.markTestedFiles);
+    this.isTested = true;
   }
 
   ngOnInit(): void {

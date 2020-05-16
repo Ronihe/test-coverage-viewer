@@ -34,11 +34,12 @@ func (r *NewRepo) StarNum() int {
 	res, err := http.Get(starUrl)
 
 	if err != nil {
-		logrus.WithError(err).Fatal("get star http get request failed")
+		logrus.WithError(err).Error("get star http get request failed")
 	}
 
 	if res.StatusCode != 200 {
-		logrus.Fatal("get star http get request not success")
+		logrus.Error("get star http get request not success")
+		return 0
 	}
 
 	var starNum starJson
@@ -57,12 +58,15 @@ func getFiles(owner string, repoName string, dir string) []File {
 	res, err := http.Get(contentUrl)
 
 	if err != nil {
-		logrus.WithError(err).Fatal("")
+		logrus.WithError(err).Error("get file http request failed")
+		return nil
 	}
 
 	if res.StatusCode != 200 {
-		logrus.Fatal("get files http get request not success")
+		logrus.Error("get files http get request not success")
+		return nil
 	}
+
 
 	var fileList []fileJson
 	json.NewDecoder(res.Body).Decode(&fileList)
@@ -84,7 +88,8 @@ func getFiles(owner string, repoName string, dir string) []File {
 
 	err = execTest(dir)
 	if err != nil {
-		logrus.WithError(err).Fatal("could not go test the github repo")
+		logrus.WithError(err).Error("could not go test the github repo")
+		return nil
 	}
 
 	coverageMap := ParseFile(dir)
@@ -106,11 +111,13 @@ func getContentForFileName(owner, repoName, fileName string) string {
 	contentUrl := fmt.Sprintf("%s%s/%s/contents/%s", baseUrl, owner, repoName, fileName)
 	res, err := http.Get(contentUrl)
 	if err != nil {
-		logrus.WithError(err).Fatal("get content http request failed")
+		logrus.WithError(err).Error("get content http request failed")
+		return ""
 	}
 
 	if res.StatusCode != 200 {
-		logrus.Fatal("get content http request not success")
+		logrus.Error("get content http request not success")
+		return ""
 	}
 
 	var fileContent fileContentJson
@@ -123,7 +130,8 @@ func getContentForFileName(owner, repoName, fileName string) string {
 func decodeContent(encodedString string) string {
 	decoded, err := b64.StdEncoding.DecodeString(encodedString)
 	if err != nil {
-		logrus.WithError(err).Fatal("could not 64 decode")
+		logrus.WithError(err).Error("could not 64 decode")
+		return ""
 	}
 
 	return string(decoded)

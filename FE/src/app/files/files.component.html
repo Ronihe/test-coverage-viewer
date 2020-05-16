@@ -4,17 +4,15 @@ repo: repoSub$|async
 }"
 ></ng-template>
   <div *ngIf="repo; else loadingSpinner">
-    
     <div class ="header">
       <div>
-        {{path}} {{starNum}}
+        {{path}} &#10025; {{starNum}}
       </div>
-      <button (click)="runTest()"> RUN TEST</button>  
+      <button *ngIf="!isTested; else tested" (click)="runTest()"> RUN TEST</button>  
+      <ng-template #tested> TESTS RAN SUCCESSFULLY!</ng-template> 
     </div>
     <div  class="repo">
-      
-      <div class="file-list">
-        
+      <div class="file-list"> 
         <mat-table [dataSource]="markTestedFiles" data-test-id="repo-file-name">
           <ng-container matColumnDef="name">
             <mat-header-cell *matHeaderCellDef> File </mat-header-cell>
@@ -30,7 +28,6 @@ repo: repoSub$|async
           ></mat-row>
         </mat-table>
       </div>
-      
       <div class="file-content">
         <div class="file-content-header">{{currentFile.name}}</div>
         <ol>
@@ -39,9 +36,7 @@ repo: repoSub$|async
           </li>
         </ol>
       </div>
-      
-    </div>
-    
+    </div> 
   </div>
   
   <ng-template #loadingSpinner>
