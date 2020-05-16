@@ -12,7 +12,6 @@ export class RepoEffects {
   constructor(private repoService: RepoService, private action$: Actions) {}
 
   GetRepo$: Observable<Action> = createEffect(() => {
-    console.log('what happened in effect--');
     return this.action$.pipe(
       ofType(RepoActions.GetRepoAction),
       mergeMap((action) => {

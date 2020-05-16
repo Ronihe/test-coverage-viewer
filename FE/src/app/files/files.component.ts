@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Store, select } from '@ngrx/store';
+import { Store, select, resultMemoize } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-import { Repo, FileModel, ModifiedFileModel } from '../repo.model';
+import { Repo, FileModel, TestedFileModel, MarkLine } from '../repo.model';
 import RepoState from '../repo.state';
-import { getTestBed } from '@angular/core/testing';
 import * as RepoActions from '../repo.action';
 import TestedRepoModel from '../repo.model';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'files',
@@ -20,12 +18,9 @@ export class FilesComponent implements OnInit {
   repoSub$: Observable<RepoState>;
   repoObject: RepoState;
   repo: TestedRepoModel;
-  modifiledFiles: ModifiedFileModel[];
-  currentFile: ModifiedFileModel;
+  markTestedFiles: TestedFileModel[];
+  currentFile: TestedFileModel;
   displayedColumns: string[] = ['name'];
-
-  test1 = 'fdhkadjkaf';
-  test2 = '        dfdafd';
 
   constructor(
     private store: Store<{ repo: RepoState }>,
@@ -36,24 +31,24 @@ export class FilesComponent implements OnInit {
         this.repoObject = result;
         this.repo = this.repoObject.tested;
         if (this.repo) {
-          this.modifiledFiles = this.repo.goFiles.map((x) => {
+          this.markTestedFiles = this.repo.goFiles.map((x) => {
             let splited = x.content.split('\n');
-            let splitedContent = []
+            let markedContent = splited.map((line) => {
+              let markedLines: MarkLine = {
+                line: line,
+                tested: false,
+              };
+              return markedLines;
+            });
 
-            for (let i = 0; i < splitedContent.length; i++) {
-              let numberedString = (i + 1) + splitedContent[i];
-              splitedContent.push(numberedString)
-            }
-
-            let modifiedFile: ModifiedFileModel = {
+            let testedFile: TestedFileModel = {
               name: x.name,
-              splitedContent: splitedContent,
+              markedContent: markedContent,
               testCoverage: x.testCoverage,
             };
-            return modifiedFile;
+            return testedFile;
           });
-          console.log('modied--', this.modifiledFiles);
-          this.currentFile = this.modifiledFiles[0];
+          this.currentFile = this.markTestedFiles[0];
         }
       })
     );
@@ -61,7 +56,47 @@ export class FilesComponent implements OnInit {
 
   changeFile(file) {
     this.currentFile = file;
-    // this.currentFile =
+  }
+
+  runTest() {
+    let newMarkTestedFiles = this.markTestedFiles.map((file) => {
+      let testedLines = new Set();
+      if (file.testCoverage) {
+        file.testCoverage.forEach((x) => {
+          for (let i = x.startLine; i <= x.endLine; i++) {
+            testedLines.add(i);
+          }
+        });
+      }
+
+      let markedLines: MarkLine[] = [];
+
+      for (let i = 0; i < file.markedContent.length; i++) {
+        let markLine: MarkLine = {
+          line: file.markedContent[i].line,
+          tested: false,
+        };
+
+        if (testedLines.has(i + 1)) {
+          markLine.tested = true;
+        } else {
+          markLine.tested = false;
+        }
+        markedLines.push(markLine);
+      }
+
+      let testedFile: TestedFileModel = {
+        name: file.name,
+        markedContent: markedLines,
+        testCoverage: file.testCoverage,
+      };
+
+      return testedFile;
+    });
+
+    console.log(newMarkTestedFiles);
+    this.markTestedFiles = newMarkTestedFiles;
+    console.log(this.markTestedFiles);
   }
 
   ngOnInit(): void {}

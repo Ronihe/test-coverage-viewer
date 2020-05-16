@@ -8,12 +8,16 @@ export default class TestedRepoModel {
   goFiles: FileModel[];
 }
 
-export interface ModifiedFileModel {
+export interface TestedFileModel {
   name: string;
-  splitedContent: string[];
+  markedContent: MarkLine[];
   testCoverage: CoverageBlockModel[];
 }
 
+export interface MarkLine {
+  line: string;
+  tested: boolean;
+}
 export interface FileModel {
   name: string;
   content: string;

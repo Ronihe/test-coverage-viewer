@@ -3,41 +3,43 @@
 repo: repoSub$|async
 }"
 ></ng-template>
-
-<p>files</p>
-  <li>
-    {{test1}}
-  </li>
-  <li>{{test2}}</li>
-
-<div *ngIf="repo">
-  <p> Stars {{repo.starNum}}</p>
-  <div>
+  <div *ngIf="repo">
     
-    <mat-table [dataSource]="modifiledFiles"data-test-id="repo-fie-name">
-      <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef> File </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>  
-      </ng-container>
+    <div class ="header">
+      <div>
+        owner and repo {{ repo.starNum}}
+      </div>
+      <button (click)="runTest()"> RUN TEST</button>  
+    </div>
+    <div  class="repo">
       
-      <mat-header-row
-      *matHeaderRowDef="displayedColumns"
-      ></mat-header-row>
-      <mat-row
-      *matRowDef="let row; columns: displayedColumns"
-      (click)="changeFile(row)"
-      ></mat-row>
-    </mat-table>
-    <ul style="list-style: none;">
-      <li *ngFor="let line of currentFile.splitedContent">
-        {{line}}
-      </li>
+      <div class="file-list">
+        
+        <mat-table [dataSource]="markTestedFiles" data-test-id="repo-file-name">
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef> File </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>  
+          </ng-container>
+          
+          <mat-header-row
+          *matHeaderRowDef="displayedColumns"
+          ></mat-header-row>
+          <mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          (click)="changeFile(row)"
+          ></mat-row>
+        </mat-table>
+      </div>
       
+      <div class="file-content">
+        <div class="file-content-header">{{currentFile.name}}</div>
+        <ol>
+          <li *ngFor="let markLine of currentFile.markedContent" [class.highlighted]="markLine.tested === true">
+            {{markLine.line}}
+          </li>
+        </ol>
+      </div>
       
-    </ul>
+    </div>
     
-    
-    <p>{{currentFile.splitedContent}}</p>
   </div>
-</div>
-
