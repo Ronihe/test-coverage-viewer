@@ -1,4 +1,4 @@
-# Go-Test_viewer
+# Go-Test-viewer
 
 This app can remotely test your Golang code in github repository.
 
