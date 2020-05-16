@@ -23,3 +23,12 @@ This app can remotely test your Golang code in github repository.
 ## Demo to play with this app.
 
 [Demo](https://drive.google.com/file/d/1oEcyIN4Hxpjz2AQQv0gRY2g3VnqtaXq3/view)
+
+## TODO(just some thoughts):
+1. add database to BE
+2. Redesgin the route:
+   - /info : clone repo, all the file for go file, return the file and file content with github api
+   - /test: to test on the repo, save the cverage for each file in the database. 
+   - /delete: delete the cloned repo
+...  
+3. better UI dataflow cleaner data model
