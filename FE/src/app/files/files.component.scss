@@ -33,7 +33,7 @@
     width: 100%;
 
     .highlighted {
-      background-color:#F7E7E8;
+      background-color: #f7e7e8;
     }
 
     .file-content-header {
@@ -41,4 +41,11 @@
       line-height: 64px;
     }
   }
+}
+
+mat-spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -150px;
 }

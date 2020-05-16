@@ -12,6 +12,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { RepoEffects } from './repo.effects';
 import { RepoReducer } from './repo.reducer';
 import { MatTableModule } from '@angular/material/table';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent, RepoComponent, FilesComponent],
@@ -23,8 +25,10 @@ import { MatTableModule } from '@angular/material/table';
     HttpClientModule,
     ReactiveFormsModule,
     MatTableModule,
+    MatProgressSpinnerModule,
     StoreModule.forRoot({ repo: RepoReducer }),
     EffectsModule.forRoot([RepoEffects]),
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

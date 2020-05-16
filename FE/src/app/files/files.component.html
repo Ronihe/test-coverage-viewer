@@ -3,7 +3,7 @@
 repo: repoSub$|async
 }"
 ></ng-template>
-  <div *ngIf="repo">
+  <div *ngIf="repo; else loadingSpinner">
     
     <div class ="header">
       <div>
@@ -43,3 +43,7 @@ repo: repoSub$|async
     </div>
     
   </div>
+  
+  <ng-template #loadingSpinner>
+    <mat-spinner class="spinner"></mat-spinner>
+  </ng-template>
